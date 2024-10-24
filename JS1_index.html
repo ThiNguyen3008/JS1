@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Piano Keyboard Sound</title>
+  <!--https://www.toptal.com/developers/keycode/table-->
+  <style>
+    html {
+      font-size: 10px;
+      background: url('./JS1_background.jpg') bottom center;
+      background-size: cover;
+      position: relative;
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+
+    .instruction {
+      border: .4rem solid black;
+      border-radius: .5rem;
+      font-size: 3rem;
+      justify-content: center;
+      margin-top: 20rem;
+      text-align: center;
+      position: absolute;
+      background: rgb(255, 255, 255);
+      left: 50%;
+      transform: translate(-50%, -50%);
+      /*center: top: 50%; left: 50%;
+  transform: translate(-50%, -50%);*/
+    }
+
+    .keys {
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .key {
+      border: .4rem solid black;
+      border-radius: .5rem;
+      margin: 1rem;
+      font-size: 2rem;
+      padding: 1rem .5rem;
+      transition: all .07s ease;
+      width: 10rem;
+      text-align: center;
+      color: white;
+      background: rgba(0, 0, 0, 0.4);
+      text-shadow: 0 0 .5rem black;
+    }
+
+    .playing {
+      transform: scale(1.1);
+      border-color: #f9468dca;
+      box-shadow: 0 0 1rem #f9468dca;
+    }
+
+    kbd {
+      display: block;
+      font-size: 5rem;
+    }
+
+    .sound {
+      font-size: 2rem;
+      text-transform: uppercase;
+      letter-spacing: .1rem;
+      color: #ffffff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="instruction">Please press the keys 1 to 8 on your keyboard</div>
+  <div class="keys">
+    <div data-key="49" class="key">
+      <kbd>1</kbd>
+      <span class="sound">DO</span>
+    </div>
+    <div data-key="50" class="key">
+      <kbd>2</kbd>
+      <span class="sound">RE</span>
+    </div>
+    <div data-key="51" class="key">
+      <kbd>3</kbd>
+      <span class="sound">MI</span>
+    </div>
+    <div data-key="52" class="key">
+      <kbd>4</kbd>
+      <span class="sound">FA</span>
+    </div>
+    <div data-key="53" class="key">
+      <kbd>5</kbd>
+      <span class="sound">SOL</span>
+    </div>
+    <div data-key="54" class="key">
+      <kbd>6</kbd>
+      <span class="sound">LA</span>
+    </div>
+    <div data-key="55" class="key">
+      <kbd>7</kbd>
+      <span class="sound">SI</span>
+    </div>
+    <div data-key="56" class="key">
+      <kbd>8</kbd>
+      <span class="sound">DO</span>
+    </div>
+  </div>
+
+  <audio data-key="49" src="JS1_sounds/1do-stretched.wav"></audio>
+  <audio data-key="50" src="JS1_sounds/2re-stretched.wav"></audio>
+  <audio data-key="51" src="JS1_sounds/3mi-stretched.wav"></audio>
+  <audio data-key="52" src="JS1_sounds/4fa-stretched.wav"></audio>
+  <audio data-key="53" src="JS1_sounds/5sol-stretched.wav"></audio>
+  <audio data-key="54" src="JS1_sounds/6la-stretched.wav"></audio>
+  <audio data-key="55" src="JS1_sounds/7si-stretched.wav"></audio>
+  <audio data-key="56" src="JS1_sounds/8do-stretched-octave.wav"></audio>
+
+  <script>
+    // Function to remove the 'playing' class after a CSS transition ends
+    function removeTransition(e) {
+      // Check if the transitioned property is 'transform'
+      if (e.propertyName !== 'transform') return; // Only proceed if it's a transform transition
+      e.target.classList.remove('playing'); // Remove the 'playing' class from the target element
+    }
+
+    // Function to play sound when a key is pressed
+    function playSound(e) {
+      // Select the audio element corresponding to the pressed key
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+      // Select the visual key element corresponding to the pressed key
+      const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+
+      // If no audio element is found for the pressed key, exit the function
+      if (!audio) return;
+
+      // Add the 'playing' class to the visual key element to trigger CSS animation
+      key.classList.add('playing');
+      audio.currentTime = 0; // Reset the audio playback to the start
+      audio.play(); // Play the audio sound
+    }
+
+    // Convert NodeList of elements with class 'key' into an array
+    const keys = Array.from(document.querySelectorAll('.key'));
+
+    // For each key, add an event listener for the end of the transition
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+    // Add an event listener to the window to detect key presses
+    window.addEventListener('keydown', playSound);
+  </script>
+
+
+</body>
+
+</html>
